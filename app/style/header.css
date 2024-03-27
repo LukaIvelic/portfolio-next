@@ -1,0 +1,237 @@
+header{
+    position: fixed;
+    width: 100%;
+    grid-column: 1/14;
+
+    border-bottom: 1px solid lightgray;
+    height: 10rem;
+
+    display: grid;
+    grid-template-columns: repeat(13, 1fr);
+    align-items: center;
+}
+
+header #landing-page{
+    grid-column: 2;
+}
+
+#menu-button{
+    grid-column: 12;
+    /* border: 1px solid red; */
+    width: 10rem;
+    height: 10rem;
+
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+
+#menu-button div{
+    display: flex;
+    flex-direction: column;
+    row-gap: 1rem;
+
+    transform: rotateY(180deg);
+    transition: margin-bottom 0.5s;
+}
+
+#menu-button div svg{
+    width: 10rem;
+    height: 0.5rem;
+    scale: 0.65 0.5;
+}
+
+#menu-button div:hover{
+    cursor: pointer;
+}
+
+#menu{
+    position: fixed;
+    width: 100%;
+    height: 100%;
+    background-color: rgba(0, 0, 0, 0.918);
+    color: #937D64;
+    color: #6CAE75;
+    color: #DBD4D3;
+
+    backdrop-filter: blur(10px);
+
+    z-index: 2;
+
+    left: -110%;
+    transition: left 1.25s ease;
+
+    display: grid;
+    grid-template-columns: repeat(13, 1fr);
+    grid-template-rows: repeat(20, 1fr);
+}
+
+#menu nav{
+    /* border: 1px solid red; */
+    grid-row: 3/17;
+    grid-column: 2/9;
+
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: flex-start;
+}
+
+#menu nav a{
+    color: #937D64;
+    color: #6CAE75;
+    color: #B0DAF1;
+    color: #FFFCF2;
+    color: #72A98F;
+    color: #F1AB86;
+    color: #DBD4D3;
+    text-decoration: none;
+    font-weight: 700;
+    font-size: 12rem;
+    line-height: 11rem;
+    text-transform: uppercase;
+
+    display: flex;
+    justify-content: center;
+    align-items: center;
+
+    transition: padding-left 0.5s, color 0.5s;
+}
+
+#menu nav a span{
+    width: 3rem;
+    aspect-ratio: 1/1;
+    font-size: 5rem;
+    transform: rotateZ(90deg);
+
+    display: flex;
+    justify-content: center;
+    align-items: center;
+
+    transition: transform 0.5s;
+}
+
+#menu nav a:hover > span{
+    transform: rotateZ(180deg);
+}
+
+#menu nav a:hover{
+    padding-left: 10rem;
+    color: #DBD4D3;
+    /* -webkit-text-stroke-width: 3px;
+    -webkit-text-stroke-color: #DBD4D3; */
+}
+
+#menu #slogans{
+    grid-row: 19/20;
+    grid-column: 1/14;
+
+    color: #DBD4D3;
+    
+    display: flex;
+    justify-content: center;
+    align-items: center;
+
+    font-size: 1.25rem;
+}
+
+#menu #socials{
+    grid-row: 3/17;
+    grid-column: 10/13;
+
+    /* border: 1px solid red; */
+
+    text-transform: uppercase;
+    font-weight: 700;
+
+    position: relative;
+}
+
+#socials ul{
+    list-style: none;
+
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: flex-end;
+
+    /* border: 1px solid red; */
+
+    position: absolute;
+    right: 20%;
+    top: 20%;
+
+    font-size: 2rem;
+    row-gap: 0.5rem;
+}
+
+#socials ul li{
+    display: flex;
+    align-items: center;
+    transition: padding-right 0.5s;
+}
+
+#socials ul li a{
+    color: inherit;
+    text-decoration: none;
+}
+
+#socials ul li span{
+    display: flex;
+    justify-content: center;
+    align-items: center;
+
+    transition: transform 0.5s;
+    margin-left: 1rem;
+}
+
+#socials ul li:hover{
+    cursor: pointer;
+    padding-right: 2.5rem;
+}
+
+#socials ul li:hover > span{
+    transform: rotateZ(-180deg);
+}
+
+#socials h3{
+    position: absolute;
+    right: 20%;
+    top: 50%;
+
+    display: flex;
+    justify-content: flex-end;
+    text-align: right;
+
+    width: 100%;
+
+    font-size: 2rem;
+    z-index: 10;
+
+    transition: color 0.25s;
+}
+
+#socials h3 a{
+    color: inherit;
+    text-decoration: none;
+}
+
+#socials h3 span{
+    display: flex;
+    justify-content: center;
+    align-items: center;
+
+    transition: transform 0.5s;
+    margin-left: 1rem;
+    z-index: -1;
+}
+
+#socials h3:hover{
+    cursor: pointer;
+    color: #1db954;
+}
+
+#socials h3:hover > span{
+    transform: translateX(5rem) translateY(0.5rem) scale(5, 5) rotateZ(180deg);
+}
+

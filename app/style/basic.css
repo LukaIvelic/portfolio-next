@@ -1,0 +1,29 @@
+@font-face {
+    font-family: SalmaProMedium;
+    src: url('../media/SalmaProMedium.otf');
+}
+
+*{
+    margin: 0;
+    padding: 0;
+}
+
+html{
+    height: 100%;
+    font-family: SalmaProMedium;
+}
+
+body{
+    background-color: whitesmoke;
+    width: 100%;
+    
+    display: grid;
+    grid-template-columns: repeat(13, 1fr);
+    grid-template-rows: repeat(40, 5rem);
+
+    overflow-x: hidden;
+}
+
+::-webkit-scrollbar{
+    display: none;
+}
