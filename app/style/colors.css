@@ -1,0 +1,19 @@
+:root{
+    --beaver: #937D64;
+    --pastel-green: #6CAE75;
+    --baby-blue: #B0DAF1;
+    --smoke: #FFFCF2;
+    --smooth-green: #72A98F;
+    --cold-orange: #F1AB86;
+    --gray-smoke: #DBD4D3;
+    --prussian-blue: #16324F;
+    --lapis-lazuli: #2A628F;
+}
+
+.prussian-blue{
+    color: var(--prussian-blue);
+}
+
+.lapis-lazuli{
+    color: var(--lapis-lazuli);
+}

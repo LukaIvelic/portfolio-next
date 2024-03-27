@@ -1,6 +1,8 @@
 'use client';
 
 import Link from "next/link";
+import { useState } from "react";
+
 import '../style/header.css'
 
 export default function Header(){
@@ -26,9 +28,15 @@ export default function Header(){
                 </Link>
             </nav>
 
-            {/* <div id="slogans">E. I. C. I. &nbsp;&mdash;&nbsp; Embrace Innovation & Captivate Interest</div> */}
-            <div id="slogans">Embrace Innovation &lt;&gt; Captivate Interest &lt;&gt; Break Boundaries &lt;&gt; 
-                              Push the Limits &lt;&gt; Forge New Paths &lt;&gt; Redefine Possible &lt;&gt; Lead the Way</div>
+            <div id="slogans">
+                Embrace Innovation &lt;&gt;&nbsp;
+                <span className="lapis-lazuli">Captivate Interest</span>&nbsp;&lt;&gt; 
+                Break Boundaries &lt;&gt;&nbsp;
+                <span className="lapis-lazuli">Push the Limits</span>&nbsp;&lt;&gt; 
+                Forge New Paths &lt;&gt;&nbsp;
+                <span className="lapis-lazuli">Redefine Possible</span>&nbsp;&lt;&gt; 
+                Lead the Way
+            </div>
 
             <div id="socials">
                 <ul>
@@ -45,18 +53,39 @@ export default function Header(){
                         <span>✕</span>
                     </li>
                 </ul>
-
-                <h3>
-                    <Link href="https://open.spotify.com/album/4iqbFIdGOTzXeDtt9owjQn?si=Ja6ydkvsQWSANuStprobDg">Take a look at what I listen to when developing websites</Link>
-                    <span>✕</span>
-                </h3>
             </div>
         </div>
     </>;
 
+    var [menuActive, setMenuActive] = useState(false);
+
     function handleClick(e){
-        e.currentTarget.style.marginBottom = "20rem"
-        document.getElementById("menu").style.left = "0";
+        var menuElement = document.getElementById("menu");
+        var menuButtonHeader = document.getElementById("menu-header");
+        var landingPageHeader = document.getElementById("landing-page");
+
+        landingPageHeader.style.transition = "color 1s";
+        menuButtonHeader.style.transition = "color 1s, border-radius 1s, border 1s"
+        
+        if(!menuActive){
+            menuElement.style.left = "0";
+            landingPageHeader.style.color = "#DBD4D3";
+            menuButtonHeader.style.color = "#DBD4D3"
+            menuButtonHeader.style.border = "1px solid #DBD4D3";
+
+            setMenuActive(!menuActive);
+        }else{
+            menuElement.style.left = "110%";
+            menuElement.style.opacity = "0";
+            menuElement.style.left = "-110%";
+            menuElement.style.opacity = "1";
+
+            landingPageHeader.style.color = "gray";
+            menuButtonHeader.style.color = "gray"
+            menuButtonHeader.style.border = "1px solid gray";
+
+            setMenuActive(!menuActive);
+        }
     }
 
     const header = <>
@@ -64,16 +93,8 @@ export default function Header(){
         <header>
             <Link href="/" id="landing-page">Luka Ivelić</Link>
             <div id="menu-button">
-                <div id="menudiv" onClick={handleClick}>
-                    <svg>
-                        <rect width="10rem" height="0.5rem"></rect>
-                    </svg>
-                    <svg>
-                        <rect width="5rem" height="0.5rem"></rect>
-                    </svg>
-                    <svg>
-                        <rect width="7rem" height="0.5rem"></rect>
-                    </svg>
+                <div onClick={handleClick}>
+                    <h3 onClick={handleClick} id="menu-header">Menu</h3>
                 </div>
             </div>
         </header>

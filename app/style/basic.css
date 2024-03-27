@@ -3,6 +3,11 @@
     src: url('../media/SalmaProMedium.otf');
 }
 
+@font-face {
+    font-family: CafeDeParis;
+    src: url('../media/CafeDeParis.ttf');
+}
+
 *{
     margin: 0;
     padding: 0;
@@ -14,7 +19,7 @@ html{
 }
 
 body{
-    background-color: whitesmoke;
+    background-color: #EEEEEE;
     width: 100%;
     
     display: grid;
