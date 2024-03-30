@@ -7,9 +7,54 @@ import '../style/header.css'
 
 export default function Header(){
 
+    var [active, setActive] = useState("0");
+
+    function handleTransition(e){
+        var menuElement = document.getElementById("menu");
+        var menuButtonHeader = document.getElementById("menu-header");
+        var landingPageHeader = document.getElementById("landing-page");
+
+        if(active === "2") {
+            menuElement.style.transition = "none";
+            menuElement.style.left = "-110%";
+            landingPageHeader.style.color = "gray";
+            menuButtonHeader.style.color = "gray"
+            menuButtonHeader.style.border = "1px solid gray";
+            setActive("0");
+        }
+        console.log(active)
+    }
+
+    function handleClick(e) {
+        var menuElement = document.getElementById("menu");
+        var menuButtonHeader = document.getElementById("menu-header");
+        var landingPageHeader = document.getElementById("landing-page");
+
+        menuElement.style.transition = "left 1.25s ease";
+        landingPageHeader.style.transition = "color 1s";
+        menuButtonHeader.style.transition = "color 1s, border-radius 1s, border 1s"
+
+        switch (active) {
+            case "0":
+                menuElement.style.left = "0%";
+                landingPageHeader.style.color = "#DBD4D3";
+                menuButtonHeader.style.color = "#DBD4D3"
+                menuButtonHeader.style.border = "1px solid #DBD4D3";
+                setActive("1");
+                break;
+            case "1":
+                menuElement.style.left = "110%";
+                landingPageHeader.style.color = "gray";
+                menuButtonHeader.style.color = "gray"
+                menuButtonHeader.style.border = "1px solid gray";
+                setActive("2");
+                break;
+        }
+    }
+
     const menu = <>
-        <div id="menu">
-            <nav>
+        <div id="menu" onTransitionEnd={handleTransition}>
+            <nav onTransitionEnd={(e)=>{e.stopPropagation()}}>
                 <Link href="/">
                     <span>✕</span>&nbsp;
                     Work
@@ -28,7 +73,7 @@ export default function Header(){
                 </Link>
             </nav>
 
-            <div id="slogans">
+            <div id="slogans" onTransitionEnd={(e)=>{e.stopPropagation()}}>
                 Embrace Innovation &lt;&gt;&nbsp;
                 <span className="lapis-lazuli">Captivate Interest</span>&nbsp;&lt;&gt; 
                 Break Boundaries &lt;&gt;&nbsp;
@@ -38,7 +83,7 @@ export default function Header(){
                 Lead the Way
             </div>
 
-            <div id="socials">
+            <div id="socials" onTransitionEnd={(e)=>{e.stopPropagation()}}>
                 <ul>
                     <li>
                         <Link href="https://www.linkedin.com/in/luka-iveli%C4%87-b55074227/">LinkedIn</Link>&nbsp;
@@ -56,37 +101,6 @@ export default function Header(){
             </div>
         </div>
     </>;
-
-    var [menuActive, setMenuActive] = useState(false);
-
-    function handleClick(e){
-        var menuElement = document.getElementById("menu");
-        var menuButtonHeader = document.getElementById("menu-header");
-        var landingPageHeader = document.getElementById("landing-page");
-
-        landingPageHeader.style.transition = "color 1s";
-        menuButtonHeader.style.transition = "color 1s, border-radius 1s, border 1s"
-        
-        if(!menuActive){
-            menuElement.style.left = "0";
-            landingPageHeader.style.color = "#DBD4D3";
-            menuButtonHeader.style.color = "#DBD4D3"
-            menuButtonHeader.style.border = "1px solid #DBD4D3";
-
-            setMenuActive(!menuActive);
-        }else{
-            menuElement.style.left = "110%";
-            menuElement.style.opacity = "0";
-            menuElement.style.left = "-110%";
-            menuElement.style.opacity = "1";
-
-            landingPageHeader.style.color = "gray";
-            menuButtonHeader.style.color = "gray"
-            menuButtonHeader.style.border = "1px solid gray";
-
-            setMenuActive(!menuActive);
-        }
-    }
 
     const header = <>
         {menu}
