@@ -1,87 +1,123 @@
-import React, { useRef, useState, useEffect } from 'react'
+// 'use client'
+
+import React, { useRef, useEffect } from 'react'
 import { Canvas, useFrame, useThree } from '@react-three/fiber'
 import { OrbitControls, PerspectiveCamera } from '@react-three/drei'
+import * as THREE from 'three'
 
-function Icosahedron(props){
+import '../../style/three.css'
+
+function SceneCamera() {
+    const cameraRef = useRef();
+    
+    useEffect(() => {
+        cameraRef.current.fov = 75;
+        cameraRef.current.near = 1;
+        cameraRef.current.far = 1000;
+        cameraRef.current.position.set(0, 0, 150);
+    }, []);
+
+    var animatingForwards = false;
+    var animatingBackwards = false;
+    useThree(({ camera }) => {
+        window.onwheel = (e) => {
+            if (animatingForwards || animatingBackwards) return;
+
+            if (e.deltaY === 100) {
+                moveCamera();
+                function moveCamera() {
+                    if (camera.position.z === 10) {
+                        animatingForwards = false;
+                        cancelAnimationFrame(moveCamera)
+                        return;
+                    } else {
+                        animatingForwards = true;
+                        camera.position.z -= 1;
+                        camera.rotateOnAxis(new THREE.Vector3(0, 0, 1), 1 * Math.PI / 180)
+                        requestAnimationFrame(moveCamera);
+                    }
+                }
+            }
+            else {
+                moveCamera();
+                function moveCamera() {
+                    if (camera.position.z === 150) {
+                        animatingBackwards = false;
+                        cancelAnimationFrame(moveCamera)
+                        return;
+                    } else {
+                        animatingBackwards = true;
+                        camera.position.z += 1;
+                        camera.rotateOnAxis(new THREE.Vector3(0, 0, 1), -1 * Math.PI / 180)
+                        requestAnimationFrame(moveCamera);
+                    }
+                }
+            }
+        }
+    })
+
+    return <PerspectiveCamera makeDefault ref={cameraRef}></PerspectiveCamera>;
+}
+
+function TorusKnot(props){
     const meshRef = useRef();
     const geometryRef = useRef();
     const materialRef = useRef();
 
-    var direction = 1;
-
-    // window.onwheel = (e) => {
-    //     let rad = 1;
-    //     if (e.deltaX === 0 && e.deltaY === 100){
-    //         direction = 1;
-    //     }else{
-    //         direction = -1;
-    //     }
-    //     meshRef.current.rotateX(direction * rad * Math.PI / 180);
-    // };
-
-    // useFrame((state, delta) =>{
-    //     let rad = 0.1 * Math.PI / 180;
-    //     meshRef.current.rotateX(direction * rad);
-    // })
-
     const mesh = <>
         <mesh ref={meshRef} position={[0,0,0]}>
-            <icosahedronGeometry ref={geometryRef} args={[50, 0]}/>
-            <meshPhysicalMaterial ref={materialRef} color={"white"} transmission={0.95} metalness={0} roughness={0} ior={2.33} wireframe={false}/>
+            <torusKnotGeometry ref={geometryRef} args={[40, 10, 1000, 1000]}/>
+            <meshPhongMaterial ref={materialRef} color={"white"}/>
         </mesh>
     </>;
 
     return(mesh);
 }
 
-function Ring(props){
-    const meshRef = useRef();
-    const geometryRef = useRef();
-    const materialRef = useRef();
+function Circles(props){
 
-    var direction = 1;
+    var meshRef = useRef();
 
-    window.onwheel = (e) => {
-        let rad = 1;
-        if (e.deltaX === 0 && e.deltaY === 100) {
-            direction = 1;
-        } else {
-            direction = -1;
-        }
-        meshRef.current.rotateZ(direction * rad * Math.PI / 180);
+    var degree = 0;
+    useFrame((state, delta)=>{
+        degree = props.speed;
+        let rad = degree * Math.PI / 180;
+        meshRef.current.rotateZ(rad * props.direction);
+    });
 
-    };
+    let vectors = [];
+    for(let degree = 0; degree < 360; degree += props.spread){
+        let rad = degree * Math.PI / 180;
+        vectors.push(new THREE.Vector3(Math.cos(rad), Math.sin(rad), 0));
+    }
 
-    useFrame((state, delta) => {
-        let rad = 0.1 * Math.PI / 180;
-        meshRef.current.rotateZ(direction * rad);
-    })
+    let dots = [];
+    for(let i=0; i < vectors.length; i++){
+        var sphereGeometry = <sphereGeometry args={[0.1, 10, 10]}/>
+        var sphereMaterial = <meshPhysicalMaterial color={"white"}/>
+        dots.push(<mesh key={i} position={[vectors[i].x * props.radius, vectors[i].y * props.radius, vectors[i].z]}>{sphereGeometry}{sphereMaterial}</mesh>);
+    }
 
-    const mesh = <>
-        <mesh ref={meshRef} position={props.position} key={props.key}>
-            <ringGeometry ref={geometryRef} args={props.args} />
-            <meshPhysicalMaterial ref={materialRef} color={"lightgray"} transmission={0.95} metalness={0} roughness={0} ior={2.33} wireframe={true} side="DoubleSide"/>
-        </mesh>
-    </>;
+    var mesh = <mesh ref={meshRef} key={Date.now()}>
+        {dots}
+    </mesh>
 
-    return (mesh);
+    return (mesh)
 }
 
 export default function BackgroundCanvas(){
+
     const canvas = <>
         <div id='canvas' >
             <Canvas flat linear>
-                <PerspectiveCamera position={[0,0,200]} makeDefault>
+                <SceneCamera>
                     <OrbitControls />
-                </PerspectiveCamera>
-                {/* <axesHelper args={[50, 50, 50]}></axesHelper> */}
-                
-                <Icosahedron />
+                </SceneCamera>
 
-                <pointLight color={"#0044aa"} intensity={30000} distance={1000} decay={1.3} position={[150, 150, 150]} />
-                <pointLight color={"white"} intensity={5000} distance={1000} decay={1.3} position={[150, 0, 0]} />
-                <pointLight color={"#0044aa"} intensity={5000} distance={1000} decay={1.3} position={[0, 0, 150]} />
-
+                {/* <axesHelper args={[50]}/> */}
+                <TorusKnot />
+                <spotLight color={"gray"} intensity={2000} distance={1000} penumbra={1} decay={1} position={[0, 150, 150]} lookAt={[0,0,0]} />
+                <Circles radius={100} spread={0.75} direction={-1} speed={0.05} />
             </Canvas>
         </div>
     </>;

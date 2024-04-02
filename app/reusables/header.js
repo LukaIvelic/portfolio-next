@@ -22,7 +22,6 @@ export default function Header(){
             menuButtonHeader.style.border = "1px solid gray";
             setActive("0");
         }
-        console.log(active)
     }
 
     function handleClick(e) {
@@ -74,12 +73,12 @@ export default function Header(){
             </nav>
 
             <div id="slogans" onTransitionEnd={(e)=>{e.stopPropagation()}}>
-                Embrace Innovation &lt;&gt;&nbsp;
-                <span className="lapis-lazuli">Captivate Interest</span>&nbsp;&lt;&gt; 
-                Break Boundaries &lt;&gt;&nbsp;
-                <span className="lapis-lazuli">Push the Limits</span>&nbsp;&lt;&gt; 
-                Forge New Paths &lt;&gt;&nbsp;
-                <span className="lapis-lazuli">Redefine Possible</span>&nbsp;&lt;&gt; 
+                Embrace Innovation •&nbsp;
+                <span className="lapis-lazuli">Captivate Interest</span>&nbsp;•
+                Break Boundaries •&nbsp;
+                <span className="lapis-lazuli">Push the Limits</span>&nbsp;•
+                Forge New Paths •&nbsp;
+                <span className="lapis-lazuli">Redefine Possible</span>&nbsp;•
                 Lead the Way
             </div>
 

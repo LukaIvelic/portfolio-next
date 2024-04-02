@@ -5,13 +5,16 @@ main{
     z-index: -1;
 }
 
-#canvas{
+#blur-div{
     position: fixed;
     left: 0;
     top: 0;
 
     width: 100% !important;
     height: 100% !important;
+    
+    background-color: transparent;
+    backdrop-filter: blur(0px);
 
     z-index: -2;
 }
