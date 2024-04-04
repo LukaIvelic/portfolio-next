@@ -14,44 +14,71 @@ function SceneCamera() {
         cameraRef.current.fov = 75;
         cameraRef.current.near = 1;
         cameraRef.current.far = 1000;
-        cameraRef.current.position.set(0, 0, 150);
+        cameraRef.current.position.set(0, 0, 100);
     }, []);
 
-    var animatingForwards = false;
-    var animatingBackwards = false;
+    function constrain(min, max, curr){
+        if(curr < min) return min;
+        if(curr > max) return max;
+        return curr;
+    }
+
     useThree(({ camera }) => {
+
+        let animationOngoing = false;
+
+        function proba(x, y, z) {
+            animationOngoing = true;
+            
+            camera.lookAt(new THREE.Vector3(0, 0, 0));
+            
+            var xSign = 0, ySign = 0, zSign = 0;
+            if (x < camera.position.x) xSign = -1;
+            else if (x > 0) xSign = 1;
+
+            if (y < camera.position.y) ySign = -1;
+            else if (y > 0) ySign = 1;
+
+            if (z < camera.position.z) zSign = -1;
+            else if (z > 0) zSign = 1;
+
+            if (!camera.position.equals(new THREE.Vector3(x, y, z))){
+                if (camera.position.x !== x) {
+                    camera.position.x += xSign;
+                }
+                if (camera.position.y !== y) {
+                    camera.position.y += ySign;
+                }
+                if (camera.position.z !== z) {
+                    camera.position.z += zSign;
+                }
+                requestAnimationFrame(() => { proba(x,y,z) });
+            }else{
+                animationOngoing = false;
+                cancelAnimationFrame(proba);
+                return;
+            }
+            return;
+        }
+
+        var animationStage = 0;
+        var animationStages = [
+            [0, 0, 100],
+            [50, 100, 0], 
+            [100, 50, 0],
+            [70, 70, 70],
+            [0, 0, 100],
+        ];
         window.onwheel = (e) => {
-            if (animatingForwards || animatingBackwards) return;
+            if(animationOngoing) return;
 
             if (e.deltaY === 100) {
-                moveCamera();
-                function moveCamera() {
-                    if (camera.position.z === 10) {
-                        animatingForwards = false;
-                        cancelAnimationFrame(moveCamera)
-                        return;
-                    } else {
-                        animatingForwards = true;
-                        camera.position.z -= 1;
-                        camera.rotateOnAxis(new THREE.Vector3(0, 0, 1), 1 * Math.PI / 180)
-                        requestAnimationFrame(moveCamera);
-                    }
-                }
+                animationStage = constrain(0, animationStages.length-1, ++animationStage);
+                proba(animationStages[animationStage][0], animationStages[animationStage][1], animationStages[animationStage][2]);
             }
             else {
-                moveCamera();
-                function moveCamera() {
-                    if (camera.position.z === 150) {
-                        animatingBackwards = false;
-                        cancelAnimationFrame(moveCamera)
-                        return;
-                    } else {
-                        animatingBackwards = true;
-                        camera.position.z += 1;
-                        camera.rotateOnAxis(new THREE.Vector3(0, 0, 1), -1 * Math.PI / 180)
-                        requestAnimationFrame(moveCamera);
-                    }
-                }
+                animationStage = constrain(0, animationStages.length-1, --animationStage);
+                proba(animationStages[animationStage][0], animationStages[animationStage][1], animationStages[animationStage][2]);
             }
         }
     })
@@ -64,10 +91,16 @@ function TorusKnot(props){
     const geometryRef = useRef();
     const materialRef = useRef();
 
+    useFrame((state, delta) =>{
+        meshRef.current.rotateZ(0.05 * Math.PI / 180);
+        meshRef.current.rotateY(0.05 * Math.PI / 180);
+        meshRef.current.rotateX(0.05 * Math.PI / 180);
+    })
+
     const mesh = <>
         <mesh ref={meshRef} position={[0,0,0]}>
-            <torusKnotGeometry ref={geometryRef} args={[40, 10, 1000, 1000]}/>
-            <meshPhongMaterial ref={materialRef} color={"white"}/>
+            <icosahedronGeometry ref={geometryRef} args={[50, 0, 1000, 1000]}/>
+            <meshPhysicalMaterial ref={materialRef} color={"white"} transparent={true}/>
         </mesh>
     </>;
 
@@ -116,8 +149,14 @@ export default function BackgroundCanvas(){
 
                 {/* <axesHelper args={[50]}/> */}
                 <TorusKnot />
-                <spotLight color={"gray"} intensity={2000} distance={1000} penumbra={1} decay={1} position={[0, 150, 150]} lookAt={[0,0,0]} />
-                <Circles radius={100} spread={0.75} direction={-1} speed={0.05} />
+                {/* <Circles radius={100} spread={2.5} direction={-1} speed={0.05} /> */}
+
+                <spotLight color={"white"} intensity={750} distance={1000} penumbra={1} decay={1} position={[0, 150, 150]} lookAt={[0,0,0]} />
+                <spotLight color={"white"} intensity={100} distance={1000} penumbra={1} decay={1} position={[-150, -150, -150]} lookAt={[0, 0, 0]} />
+                <spotLight color={"black"} intensity={100} distance={1000} penumbra={1} decay={1} position={[-150, 150, 0]} lookAt={[0, 0, 0]} />
+                <spotLight color={"white"} intensity={100} distance={1000} penumbra={1} decay={1} position={[150, -50, 0]} lookAt={[0, 0, 0]} />
+
+
             </Canvas>
         </div>
     </>;
