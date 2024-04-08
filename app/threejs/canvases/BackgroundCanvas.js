@@ -14,7 +14,7 @@ function SceneCamera() {
         cameraRef.current.fov = 75;
         cameraRef.current.near = 1;
         cameraRef.current.far = 1000;
-        cameraRef.current.position.set(0, 0, 100);
+        cameraRef.current.position.set(0, 0, 125);
     }, []);
 
     function constrain(min, max, curr){
@@ -27,7 +27,7 @@ function SceneCamera() {
 
         let animationOngoing = false;
 
-        function proba(x, y, z) {
+        function moveCamera(x, y, z) {
             animationOngoing = true;
             
             camera.lookAt(new THREE.Vector3(0, 0, 0));
@@ -52,10 +52,10 @@ function SceneCamera() {
                 if (camera.position.z !== z) {
                     camera.position.z += zSign;
                 }
-                requestAnimationFrame(() => { proba(x,y,z) });
+                requestAnimationFrame(() => { moveCamera(x,y,z) });
             }else{
                 animationOngoing = false;
-                cancelAnimationFrame(proba);
+                cancelAnimationFrame(moveCamera);
                 return;
             }
             return;
@@ -63,22 +63,22 @@ function SceneCamera() {
 
         var animationStage = 0;
         var animationStages = [
-            [0, 0, 100],
-            [50, 100, 0], 
-            [100, 50, 0],
-            [70, 70, 70],
-            [0, 0, 100],
+            [0, 0, 125],
+            [50, 10, 0], 
+            [50, 150, 0],
+            [5, 0, 5],
+            [0, 0, 105],
         ];
         window.onwheel = (e) => {
             if(animationOngoing) return;
 
             if (e.deltaY === 100) {
                 animationStage = constrain(0, animationStages.length-1, ++animationStage);
-                proba(animationStages[animationStage][0], animationStages[animationStage][1], animationStages[animationStage][2]);
+                moveCamera(animationStages[animationStage][0], animationStages[animationStage][1], animationStages[animationStage][2]);
             }
             else {
                 animationStage = constrain(0, animationStages.length-1, --animationStage);
-                proba(animationStages[animationStage][0], animationStages[animationStage][1], animationStages[animationStage][2]);
+                moveCamera(animationStages[animationStage][0], animationStages[animationStage][1], animationStages[animationStage][2]);
             }
         }
     })
@@ -99,8 +99,8 @@ function TorusKnot(props){
 
     const mesh = <>
         <mesh ref={meshRef} position={[0,0,0]}>
-            <icosahedronGeometry ref={geometryRef} args={[50, 0, 1000, 1000]}/>
-            <meshPhysicalMaterial ref={materialRef} color={"white"} transparent={true}/>
+            <torusKnotGeometry ref={geometryRef} args={[50, 10, 1000, 1000]}/>
+            <meshPhysicalMaterial ref={materialRef} color={"white"} metalness={0} roughness={0} transmission={0.5} ior={1.33}/>
         </mesh>
     </>;
 
@@ -111,6 +111,7 @@ function Circles(props){
 
     var meshRef = useRef();
 
+    
     var degree = 0;
     useFrame((state, delta)=>{
         degree = props.speed;
@@ -149,12 +150,11 @@ export default function BackgroundCanvas(){
 
                 {/* <axesHelper args={[50]}/> */}
                 <TorusKnot />
-                {/* <Circles radius={100} spread={2.5} direction={-1} speed={0.05} /> */}
 
-                <spotLight color={"white"} intensity={750} distance={1000} penumbra={1} decay={1} position={[0, 150, 150]} lookAt={[0,0,0]} />
-                <spotLight color={"white"} intensity={100} distance={1000} penumbra={1} decay={1} position={[-150, -150, -150]} lookAt={[0, 0, 0]} />
-                <spotLight color={"black"} intensity={100} distance={1000} penumbra={1} decay={1} position={[-150, 150, 0]} lookAt={[0, 0, 0]} />
-                <spotLight color={"white"} intensity={100} distance={1000} penumbra={1} decay={1} position={[150, -50, 0]} lookAt={[0, 0, 0]} />
+                <spotLight color={"white"} intensity={500} distance={1000} penumbra={1} decay={1} position={[0, 150, 150]} lookAt={[0,0,0]} />
+                <spotLight color={"#16324F"} intensity={10000} distance={1000} penumbra={1} decay={1} position={[-150, -150, -150]} lookAt={[0, 0, 0]} />
+                <spotLight color={"#2A628F"} intensity={1000} distance={1000} penumbra={1} decay={1} position={[-150, 150, 0]} lookAt={[0, 0, 0]} />
+                <spotLight color={"#B0DAF1"} intensity={500} distance={1000} penumbra={1} decay={1} position={[150, -50, 0]} lookAt={[0, 0, 0]} />
 
 
             </Canvas>
