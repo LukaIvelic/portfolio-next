@@ -12,14 +12,16 @@ header{
     height: 10rem;
 
     display: grid;
-    grid-template-columns: repeat(13, 1fr);
+    grid-template-columns: repeat(21, 1fr);
     align-items: center;
+
+    z-index: 1;
 }
 
 header #landing-page{
     color: gray;
-    grid-column: 1/4;
-    font-size: 1.5rem;
+    grid-column: 1/5;
+    font-size: 2rem;
 
     text-decoration: none;
 
@@ -35,7 +37,7 @@ header #landing-page{
 }
 
 #menu-button{
-    grid-column: 11/14;
+    grid-column: 18/22;
     width: 10rem;
     height: 10rem;
 

@@ -4,6 +4,7 @@ import Link from "next/link";
 import { useState } from "react";
 
 import '../style/header.css'
+import BackgroundCanvas from "../threejs/canvases/BackgroundCanvas";
 
 export default function Header(){
 

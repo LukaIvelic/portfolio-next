@@ -1,4 +1,4 @@
-// 'use client'
+'use client'
 
 import React, { useRef, useEffect } from 'react'
 import { Canvas, useFrame, useThree } from '@react-three/fiber'
@@ -31,27 +31,19 @@ function SceneCamera() {
             animationOngoing = true;
             
             camera.lookAt(new THREE.Vector3(0, 0, 0));
+
+            var moveAmount = 0.5;
             
-            var xSign = 0, ySign = 0, zSign = 0;
-            if (x < camera.position.x) xSign = -1;
-            else if (x > 0) xSign = 1;
-
-            if (y < camera.position.y) ySign = -1;
-            else if (y > 0) ySign = 1;
-
-            if (z < camera.position.z) zSign = -1;
-            else if (z > 0) zSign = 1;
-
             if (!camera.position.equals(new THREE.Vector3(x, y, z))){
-                if (camera.position.x !== x) {
-                    camera.position.x += xSign;
-                }
-                if (camera.position.y !== y) {
-                    camera.position.y += ySign;
-                }
-                if (camera.position.z !== z) {
-                    camera.position.z += zSign;
-                }
+                if (camera.position.x < x) camera.position.x += moveAmount;
+                if (camera.position.x > x) camera.position.x -= moveAmount;
+
+                if (camera.position.y < y) camera.position.y += moveAmount;
+                if (camera.position.y > y) camera.position.y -= moveAmount;
+
+                if (camera.position.z < z) camera.position.z += moveAmount;
+                if (camera.position.z > z) camera.position.z -= moveAmount;
+
                 requestAnimationFrame(() => { moveCamera(x,y,z) });
             }else{
                 animationOngoing = false;
@@ -62,15 +54,21 @@ function SceneCamera() {
         }
 
         var animationStage = 0;
-        var animationStages = [
-            [0, 0, 125],
-            [50, 10, 0], 
-            [50, 150, 0],
-            [5, 0, 5],
-            [0, 0, 105],
-        ];
+        var animationStages = [[0, 0, 125]];
+        for(let i=0; i<20; i++){
+            animationStages.push(
+                [Math.round(Math.random() * 125 * (Math.random() < 0.5 ? -1 : 1), 0),
+                    Math.round(Math.random() * 125 * (Math.random() < 0.5 ? -1 : 1), 0),
+                    Math.round(Math.random() * 125 * (Math.random() < 0.5 ? -1 : 1), 0)]
+            );
+        }
+        animationStages.push([0,0,125]);
+
+        var limit = Math.max(document.body.scrollHeight, document.body.offsetHeight,
+            document.documentElement.clientHeight, document.documentElement.scrollHeight, document.documentElement.offsetHeight);
+
         window.onwheel = (e) => {
-            if(animationOngoing) return;
+            if (animationOngoing) return;
 
             if (e.deltaY === 100) {
                 animationStage = constrain(0, animationStages.length-1, ++animationStage);
@@ -100,7 +98,7 @@ function TorusKnot(props){
     const mesh = <>
         <mesh ref={meshRef} position={[0,0,0]}>
             <torusKnotGeometry ref={geometryRef} args={[50, 10, 1000, 1000]}/>
-            <meshPhysicalMaterial ref={materialRef} color={"white"} metalness={0} roughness={0} transmission={0.5} ior={1.33}/>
+            <meshPhysicalMaterial ref={materialRef} color={"#f5f5f5"} metalness={0} roughness={0.45} transmission={1} ior={1.33}/>
         </mesh>
     </>;
 
@@ -111,7 +109,6 @@ function Circles(props){
 
     var meshRef = useRef();
 
-    
     var degree = 0;
     useFrame((state, delta)=>{
         degree = props.speed;
@@ -128,7 +125,7 @@ function Circles(props){
     let dots = [];
     for(let i=0; i < vectors.length; i++){
         var sphereGeometry = <sphereGeometry args={[0.1, 10, 10]}/>
-        var sphereMaterial = <meshPhysicalMaterial color={"white"}/>
+        var sphereMaterial = <meshPhysicalMaterial color={"black"}/>
         dots.push(<mesh key={i} position={[vectors[i].x * props.radius, vectors[i].y * props.radius, vectors[i].z]}>{sphereGeometry}{sphereMaterial}</mesh>);
     }
 
@@ -141,6 +138,18 @@ function Circles(props){
 
 export default function BackgroundCanvas(){
 
+    let starArray = [];
+    for(let i=0; i<25; i++){
+        var colors = ["blue", "purple", "#16324F", "white", "navy"]
+        starArray.push(
+            <pointLight color={colors[i%colors.length]} intensity={Math.random() * 250} distance={1000} decay={1} 
+                	    position={[Math.random() * 150 * (Math.random() < 0.5 ? -1 : 1), 
+                                   Math.random() * 150 * (Math.random() < 0.5 ? -1 : 1), 
+                                   Math.random() * 150 * (Math.random() < 0.5 ? -1 : 1)]}
+                        lookAt={[0,0,0]} key={i}/>
+        );
+    }
+
     const canvas = <>
         <div id='canvas' >
             <Canvas flat linear>
@@ -148,15 +157,12 @@ export default function BackgroundCanvas(){
                     <OrbitControls />
                 </SceneCamera>
 
-                {/* <axesHelper args={[50]}/> */}
                 <TorusKnot />
-
-                <spotLight color={"white"} intensity={500} distance={1000} penumbra={1} decay={1} position={[0, 150, 150]} lookAt={[0,0,0]} />
-                <spotLight color={"#16324F"} intensity={10000} distance={1000} penumbra={1} decay={1} position={[-150, -150, -150]} lookAt={[0, 0, 0]} />
-                <spotLight color={"#2A628F"} intensity={1000} distance={1000} penumbra={1} decay={1} position={[-150, 150, 0]} lookAt={[0, 0, 0]} />
-                <spotLight color={"#B0DAF1"} intensity={500} distance={1000} penumbra={1} decay={1} position={[150, -50, 0]} lookAt={[0, 0, 0]} />
-
-
+                {
+                    starArray.map(e => {
+                        return e;
+                    })
+                }
             </Canvas>
         </div>
     </>;
