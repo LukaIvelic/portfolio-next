@@ -68,7 +68,16 @@ function SceneCamera() {
             document.documentElement.clientHeight, document.documentElement.scrollHeight, document.documentElement.offsetHeight);
 
         window.onwheel = (e) => {
-            if (animationOngoing) return;
+
+            console.log(window.scrollY + " " + (limit - 1300))
+
+            if (animationOngoing || window.scrollY >= (limit - 1300)) return;
+
+            if(window.scrollY === 0) {
+                animationStage = 0;
+                moveCamera(animationStages[animationStage][0], animationStages[animationStage][1], animationStages[animationStage][2]);
+                return;
+            }
 
             if (e.deltaY === 100) {
                 animationStage = constrain(0, animationStages.length-1, ++animationStage);

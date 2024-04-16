@@ -6,8 +6,7 @@
     width: 100% !important;
     height: 100% !important;
     
-    background-color: transparent;
-    backdrop-filter: blur(0px);
+    /* background-color: red; */
 
     z-index: -2;
 }
@@ -19,7 +18,7 @@ main{
 
     display: grid;
     grid-template-columns: repeat(21, 1fr);
-    grid-template-rows: repeat(20, 5rem);
+    grid-template-rows: repeat(40, 5rem);
 
     background: transparent;
 
@@ -27,44 +26,32 @@ main{
 }
 
 main #embrace-innovation, #captivate-interest{
-    grid-row: 3/9;
-    grid-column: 3/13;
+    grid-row: 3/15;
+    grid-column: 3/20;
 
     /* border: 1px solid red; */
 
     display: flex;
     align-items: center;
 
-    font-size: 10rem;
-    opacity: 1;
+    font-size: 15rem;
+    opacity: 0.95;
     color: var(--prussian-blue);
 
-    mix-blend-mode: difference;
+    mix-blend-mode: difference !important;
 
-    font-weight: 400;
+    font-weight: 600;
+    text-transform: uppercase;
+
+    background: -webkit-linear-gradient(-90deg, var(--prussian-blue), rgb(172, 147, 172));
+    background-clip: text;
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
 }
 
 #captivate-interest{
-    grid-row: 9/15;
-    grid-column: 10/20;
+    grid-row: 18/25;
+    grid-column: 3/20;
+
     text-align: right;
-}
-
-#x-one, #x-two{
-    grid-row: 9/15;
-    grid-column: 9/10;
-
-    /* border: 1px solid red; */
-    display: flex;
-    justify-content: center;
-    align-items: center;
-
-    font-size: 10rem;
-    font-weight: 300;
-    color: var(--prussian-blue);
-}
-
-#x-two{
-    grid-row: 3/9;
-    grid-column: 13/14;
 }

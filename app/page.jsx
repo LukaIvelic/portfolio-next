@@ -11,11 +11,8 @@ export default function LandingPage() {
         <main>
             <h1 id='embrace-innovation'>Embrace Innovation</h1>
             <h1 id='captivate-interest'>Captivate Interest</h1>
-            <h1 id='x-one'>•</h1>
-            <h1 id='x-two'>•</h1>
         </main>
     </>;
 
     return (landingPage);
 }
-
